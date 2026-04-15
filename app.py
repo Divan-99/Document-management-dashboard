@@ -23,92 +23,180 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* Hide Streamlit chrome */
-    #MainMenu { visibility: hidden; }
-    footer { visibility: hidden; }
-    header { visibility: hidden; }
-
-    /* App background and container */
-    .stApp { background-color: #204f96; color: white; }
-    .block-container {
-        max-width: 900px;
-        padding-top: 0rem;
-        margin: auto;
-        text-align: center;
-        color: white !important;
-        background-color: transparent !important;
-        box-shadow: none !important;
+    /* ── Brand tokens ──────────────────────────────────────────────────── */
+    :root {
+        --blue:        #22529A;
+        --blue-dark:   #1a3e78;
+        --blue-deeper: #132d58;
+        --yellow:      #FEDF27;
+        --yellow-hover:#e5c818;
+        --white:       #ffffff;
+        --text-muted:  rgba(255,255,255,0.7);
     }
 
-    /* General text */
-    h1, h2, h3, h4, h5, h6, p, label, span { color: white !important; }
+    /* ── Hide Streamlit chrome ─────────────────────────────────────────── */
+    #MainMenu { visibility: hidden; }
+    footer    { visibility: hidden; }
+    header    { visibility: hidden; }
 
-    /* Labels */
-    label { color: white !important; }
+    /* ── Page background ───────────────────────────────────────────────── */
+    .stApp {
+        background: linear-gradient(150deg, var(--blue) 0%, var(--blue-dark) 55%, var(--blue-deeper) 100%);
+        min-height: 100vh;
+    }
 
-    /* Inputs */
+    /* ── Central card ──────────────────────────────────────────────────── */
+    .block-container {
+        max-width: 760px;
+        padding: 0 2rem 3rem;
+        margin: 1.5rem auto;
+        background: rgba(255,255,255,0.06);
+        border-radius: 16px;
+        border-top: 4px solid var(--yellow);
+        box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+        backdrop-filter: blur(6px);
+        text-align: center;
+        color: var(--white) !important;
+    }
+
+    /* ── Typography ────────────────────────────────────────────────────── */
+    h1, h2, h3, h4, h5, h6, p, label, span, div {
+        color: var(--white) !important;
+    }
+
+    /* Page title — yellow underline accent */
+    h1 {
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.01em !important;
+        padding-bottom: 0.4rem !important;
+        border-bottom: 3px solid var(--yellow) !important;
+        display: inline-block !important;
+        margin-bottom: 0.25rem !important;
+    }
+
+    /* Subtitle / body copy */
+    p { color: var(--text-muted) !important; }
+
+    /* ── Section labels ────────────────────────────────────────────────── */
+    label, .stSelectbox label, .stTextInput label {
+        font-weight: 600 !important;
+        font-size: 0.85rem !important;
+        letter-spacing: 0.06em !important;
+        text-transform: uppercase !important;
+        color: var(--text-muted) !important;
+    }
+
+    /* ── Inputs ────────────────────────────────────────────────────────── */
     .stTextInput input,
-    textarea,
     input[type="text"],
     input[type="search"] {
-        color: white !important;
-        background-color: #1a3b70 !important;
-        border: 1px solid rgba(255,255,255,0.22) !important;
+        background: rgba(255,255,255,0.08) !important;
+        color: var(--white) !important;
+        border: 1.5px solid rgba(255,255,255,0.18) !important;
+        border-radius: 8px !important;
+        padding: 0.55rem 0.9rem !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+    }
+    .stTextInput input:focus,
+    input[type="text"]:focus {
+        border-color: var(--yellow) !important;
+        box-shadow: 0 0 0 3px rgba(254,223,39,0.2) !important;
+        outline: none !important;
     }
 
-    /* Buttons */
-    .stButton button,
-    .stDownloadButton button,
-    button[data-baseweb="button"] {
-        color: white !important;
-        background-color: #1a3b70 !important;
-        border: 1px solid rgba(255,255,255,0.22) !important;
-    }
-
-    /* Main visible select field and combobox trigger */
+    /* ── Select / combobox ─────────────────────────────────────────────── */
     div[data-baseweb="select"] > div,
     div[role="combobox"],
     div[aria-haspopup="listbox"] {
-        background-color: #1a3b70 !important;
-        color: white !important;
-        border: 1px solid rgba(255,255,255,0.22) !important;
+        background: rgba(255,255,255,0.08) !important;
+        color: var(--white) !important;
+        border: 1.5px solid rgba(255,255,255,0.18) !important;
+        border-radius: 8px !important;
+        transition: border-color 0.2s ease !important;
         box-shadow: none !important;
     }
+    div[data-baseweb="select"] > div:focus-within,
+    div[role="combobox"]:focus-within {
+        border-color: var(--yellow) !important;
+        box-shadow: 0 0 0 3px rgba(254,223,39,0.2) !important;
+    }
 
-    /* Dropdown overlay and listbox when rendered in a portal */
+    /* Dropdown overlay */
     div[data-baseweb="popover"],
     div[role="listbox"] {
-        background-color: #1a3b70 !important;
-        color: white !important;
-        border: none !important;
-        box-shadow: none !important;
+        background: var(--blue-dark) !important;
+        border: 1px solid rgba(255,255,255,0.12) !important;
+        border-radius: 8px !important;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.35) !important;
     }
-
-    /* Individual options */
     div[role="option"],
     li[role="option"] {
-        background-color: #1a3b70 !important;
-        color: white !important;
+        background: transparent !important;
+        color: var(--white) !important;
+        transition: background 0.15s ease !important;
     }
-
-    /* Hover and selected states */
     div[role="option"]:hover,
     li[role="option"]:hover {
-        background-color: #163567 !important;
-        color: white !important;
+        background: rgba(254,223,39,0.12) !important;
+        color: var(--yellow) !important;
     }
 
-    /* Placeholder text */
-    ::placeholder { color: rgba(255,255,255,0.7) !important; }
-
-    /* Make common widget boxes transparent */
-    .stBlock, .stExpander { background-color: transparent !important; }
-
-    /* Alerts and messages */
-    .stAlert, div.stWarning, div.stSuccess, div.stError {
-        color: white !important;
-        background-color: transparent !important;
+    /* ── Buttons ───────────────────────────────────────────────────────── */
+    .stButton button,
+    .stDownloadButton button,
+    button[data-baseweb="button"] {
+        background: var(--yellow) !important;
+        color: var(--blue) !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.03em !important;
+        padding: 0.5rem 1.6rem !important;
+        transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease !important;
+        box-shadow: 0 2px 10px rgba(254,223,39,0.25) !important;
     }
+    .stButton button:hover,
+    .stDownloadButton button:hover,
+    button[data-baseweb="button"]:hover {
+        background: var(--yellow-hover) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 5px 18px rgba(254,223,39,0.35) !important;
+    }
+    .stButton button:active,
+    .stDownloadButton button:active {
+        transform: translateY(0) !important;
+    }
+
+    /* ── File result rows ──────────────────────────────────────────────── */
+    div.stMarkdown p {
+        background: rgba(255,255,255,0.05) !important;
+        border-left: 3px solid var(--yellow) !important;
+        border-radius: 0 8px 8px 0 !important;
+        padding: 0.45rem 0.9rem !important;
+        margin-bottom: 0.3rem !important;
+        text-align: left !important;
+        font-size: 0.92rem !important;
+        color: var(--white) !important;
+    }
+
+    /* ── Alerts / messages ─────────────────────────────────────────────── */
+    div[data-testid="stAlert"] {
+        border-radius: 8px !important;
+        border: none !important;
+    }
+    .stAlert, div.stWarning, div.stSuccess, div.stError, div.stInfo {
+        color: var(--white) !important;
+        background: rgba(255,255,255,0.08) !important;
+        border-left: 4px solid var(--yellow) !important;
+        border-radius: 8px !important;
+    }
+
+    /* ── Placeholder ───────────────────────────────────────────────────── */
+    ::placeholder { color: var(--text-muted) !important; }
+
+    /* ── Misc ──────────────────────────────────────────────────────────── */
+    .stBlock, .stExpander { background: transparent !important; }
     </style>
     """,
     unsafe_allow_html=True,
