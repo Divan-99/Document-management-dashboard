@@ -1,6 +1,34 @@
+# Python
 __pycache__/
-*.pyc
-*.log
-.env
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
 venv/
-node_modules/
+.venv/
+env/
+.env/
+
+# Environment variables (never commit secrets)
+.env
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
+# OS artefacts
+.DS_Store
+Thumbs.db
