@@ -1,0 +1,37 @@
+{% comment %}Partial: dashboard/partials/process_card.html{% endcomment %}
+
+<div class="process-card" id="card-{{ process.id }}">
+  <div class="card-top">
+    <div class="card-info">
+      <div class="card-label">{{ process.label }}</div>
+      {% if process.description %}
+        <div class="card-desc">{{ process.description }}</div>
+      {% endif %}
+    </div>
+    <span class="status-badge status-checking" id="badge-{{ process.id }}">
+      <span class="badge-dot"></span>
+      <span class="badge-text">Checking</span>
+    </span>
+  </div>
+
+  <div class="card-meta">
+    <span class="meta-item" id="pid-{{ process.id }}"></span>
+    <span class="meta-item" id="uptime-{{ process.id }}"></span>
+    {% if process.url %}
+      <a class="meta-link" id="open-{{ process.id }}"
+         href="{{ process.url }}" target="_blank" rel="noopener"
+         style="display:none">↗ Open</a>
+    {% endif %}
+  </div>
+
+  <div class="card-actions">
+    <button class="btn btn-start" id="btn-start-{{ process.id }}"
+            onclick="controlProcess('{{ process.id }}', 'start')" disabled>Start</button>
+    <button class="btn btn-stop"  id="btn-stop-{{ process.id }}"
+            onclick="controlProcess('{{ process.id }}', 'stop')"  disabled>Stop</button>
+    <button class="btn btn-restart" id="btn-restart-{{ process.id }}"
+            onclick="controlProcess('{{ process.id }}', 'restart')" disabled>Restart</button>
+    <button class="btn btn-logs"
+            onclick="openLogs('{{ process.id }}', '{{ process.label }}')">Logs</button>
+  </div>
+</div>

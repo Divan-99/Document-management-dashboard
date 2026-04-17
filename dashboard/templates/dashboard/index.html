@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Iscar Process Dashboard{% endblock %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="split-layout" id="split-layout">
+
+  <!-- ── LEFT: main content ──────────────────────────────────────────────── -->
+  <div class="split-main" id="split-main">
+
+    <div class="dashboard-header">
+      <div>
+        <div class="dashboard-eyebrow">Operations Centre</div>
+        <h1 class="dashboard-title">Process Monitor</h1>
+        <p class="dashboard-subtitle" id="last-updated">Initialising…</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-start-all" onclick="controlAll('start')" title="Start all processes">
+          ▶ Start All
+        </button>
+        <button class="btn btn-stop-all" onclick="controlAll('stop')" title="Stop all processes">
+          ■ Stop All
+        </button>
+        <button class="btn btn-secondary" onclick="refreshAll()">↻ Refresh</button>
+      </div>
+    </div>
+
+    <!-- Stat pills -->
+    <div class="stat-pills">
+      <div class="stat-pill">
+        <div class="stat-dot running"></div>
+        <div>
+          <div class="stat-value" id="count-running">—</div>
+          <div class="stat-label">Running</div>
+        </div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-dot stopped"></div>
+        <div>
+          <div class="stat-value" id="count-stopped">—</div>
+          <div class="stat-label">Stopped</div>
+        </div>
+      </div>
+    </div>
+
+    {% if webapps %}
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon webapp">🌐</div>
+        <span class="section-label">Web Applications</span>
+        <span class="section-count">{{ webapps|length }}</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="process-grid">
+        {% for p in webapps %}
+          {% include "dashboard/partials/process_card.html" with process=p %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if ocr_scripts %}
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon ocr">⚙</div>
+        <span class="section-label">OCR Scripts</span>
+        <span class="section-count">{{ ocr_scripts|length }}</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="process-grid">
+        {% for p in ocr_scripts %}
+          {% include "dashboard/partials/process_card.html" with process=p %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div><!-- /split-main -->
+
+  <!-- ── RESIZER ─────────────────────────────────────────────────────────── -->
+  <div class="split-resizer" id="split-resizer" title="Drag to resize">
+    <div class="resizer-bar"></div>
+  </div>
+
+  <!-- ── RIGHT: log panel ───────────────────────────────────────────────── -->
+  <div class="log-panel" id="log-panel">
+    <div class="log-panel-header">
+      <div class="log-panel-title-row">
+        <span class="log-panel-title" id="log-panel-title">Output Log</span>
+        <div class="log-panel-actions">
+          <button class="btn-icon" onclick="clearLogView()">Clear</button>
+          <button class="btn-icon btn-icon-close" onclick="closeLogPanel()">✕</button>
+        </div>
+      </div>
+      <div class="log-panel-process" id="log-panel-process"></div>
+    </div>
+    <div class="log-body" id="log-body">
+      <div class="log-empty">Select a process and click Logs to view output here.</div>
+    </div>
+  </div>
+
+</div><!-- /split-layout -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'dashboard/js/dashboard.js' %}"></script>
+<script>
+  window.DASHBOARD_CONFIG = {
+    statusAllUrl: "{% url 'dashboard:status_all' %}",
+    startUrl:     "{% url 'dashboard:start'   process_id='PROCESS_ID' %}",
+    stopUrl:      "{% url 'dashboard:stop'    process_id='PROCESS_ID' %}",
+    restartUrl:   "{% url 'dashboard:restart' process_id='PROCESS_ID' %}",
+    logsUrl:      "{% url 'dashboard:logs'    process_id='PROCESS_ID' %}",
+    csrfToken:    "{{ csrf_token }}",
+    pollInterval: 5000,
+    processIds:   [{% for p in processes %}"{{ p.id }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+  };
+  initDashboard(window.DASHBOARD_CONFIG);
+</script>
+{% endblock %}

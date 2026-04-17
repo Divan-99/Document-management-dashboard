@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Iscar Process Dashboard{% endblock %}</title>
+  {% load static %}
+  <link rel="icon" type="image/png" href="{% static 'dashboard/img/favicon.png' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="{% static 'dashboard/css/main.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <nav class="navbar">
+    <a class="navbar-brand" href="{% url 'dashboard:index' %}">
+      <!-- Logo: remove black background with mix-blend-mode, keep yellow/blue colours -->
+      <div class="navbar-logo-wrap">
+        <img src="{% static 'dashboard/img/header_logo.png' %}" alt="Iscar" class="navbar-logo">
+      </div>
+      <div class="navbar-divider"></div>
+      <span class="navbar-title">Process <span>Dashboard</span></span>
+    </a>
+    <div class="navbar-right">
+      {% if user.is_authenticated %}
+        <span class="nav-user">{{ user.username }}</span>
+        <form method="post" action="{% url 'logout' %}" style="display:inline">
+          {% csrf_token %}
+          <button type="submit" class="btn-nav-logout">Sign out</button>
+        </form>
+      {% endif %}
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="message message-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </div>
+
+  <div class="toast-container" id="toasts"></div>
+  <script src="{% static 'dashboard/js/utils.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>
